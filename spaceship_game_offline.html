@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spaceship vs Asteroids</title>
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at center, #0b0c2a 0%, #000000 80%);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+    canvas { display: block; margin: 20px auto; border: 3px solid #00e5ff; border-radius: 10px; }
+    #score { font-size: 22px; }
+  </style>
+</head>
+<body>
+  <h1>Spaceship vs Asteroids</h1>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+  <div id="score">Score: 0</div>
+  <audio id="bgMusic" src="data:audio/mp3;base64,//uQxAAADhYWFhYWFhYWFh...==" loop autoplay></audio>
+  <audio id="crashSound" src="data:audio/mp3;base64,//uQxAAADhYWFhYWFhYWFh...=="></audio>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Images
+    const spaceshipImg = new Image();
+    spaceshipImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...==";
+
+    const asteroidImg = new Image();
+    asteroidImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...==";
+
+    const player = {
+      width: 50,
+      height: 50,
+      x: canvas.width / 2 - 25,
+      y: canvas.height - 70,
+      speed: 6
+    };
+
+    const obstacles = [];
+    let score = 0;
+    let gameOver = false;
+    let leftPressed = false;
+    let rightPressed = false;
+    let lastSpawn = 0;
+    let obstacleSpeed = 2;
+
+    const stars = Array.from({ length: 100 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 1 + 0.5 }));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") leftPressed = true;
+      if (e.key === "ArrowRight") rightPressed = true;
+    });
+
+    document.addEventListener("keyup", (e) => {
+      if (e.key === "ArrowLeft") leftPressed = false;
+      if (e.key === "ArrowRight") rightPressed = false;
+    });
+
+    function drawStars() {
+      ctx.fillStyle = "#fff";
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function drawPlayer() { ctx.drawImage(spaceshipImg, player.x, player.y, player.width, player.height); }
+    function drawObstacles() { obstacles.forEach(ob => ctx.drawImage(asteroidImg, ob.x, ob.y, ob.size, ob.size)); }
+
+    function updateObstacles() {
+      for (let i = obstacles.length - 1; i >= 0; i--) {
+        obstacles[i].y += obstacleSpeed;
+        if (obstacles[i].y > canvas.height) {
+          obstacles.splice(i, 1);
+          score++;
+          if (score % 5 === 0 && obstacleSpeed < 7) obstacleSpeed += 0.3;
+        }
+        if (
+          player.x < obstacles[i].x + obstacles[i].size &&
+          player.x + player.width > obstacles[i].x &&
+          player.y < obstacles[i].y + obstacles[i].size &&
+          player.y + player.height > obstacles[i].y
+        ) {
+          gameOver = true;
+          document.getElementById("crashSound").play();
+        }
+      }
+    }
+
+    function updatePlayer() {
+      if (leftPressed) player.x -= player.speed;
+      if (rightPressed) player.x += player.speed;
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+    }
+
+    function spawnObstacle() {
+      const size = 40 + Math.random() * 20;
+      const x = Math.random() * (canvas.width - size);
+      obstacles.push({ x: x, y: -size, size: size });
+    }
+
+    function drawScore() { document.getElementById("score").textContent = `Score: ${score}`; }
+
+    function drawGameOver() {
+      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#ff4444";
+      ctx.font = "40px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 20);
+      ctx.font = "20px Arial";
+      ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+      ctx.fillText("Press F5 to Restart", canvas.width / 2, canvas.height / 2 + 50);
+    }
+
+    function loop(timestamp) {
+      if (gameOver) return drawGameOver();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStars();
+      updatePlayer();
+      drawPlayer();
+      updateObstacles();
+      drawObstacles();
+      drawScore();
+      if (timestamp - lastSpawn > 900) { spawnObstacle(); lastSpawn = timestamp; }
+      requestAnimationFrame(loop);
+    }
+
+    spaceshipImg.onload = () => requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TypeRush 🚀 - Space Typing Challenge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    background: radial-gradient(ellipse at center, #000011 0%, #000000 80%);
+    color: #aaffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    user-select: none;
+    position: relative;
+  }
+
+  #overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 30, 0.9);
+    color: #00ffff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    flex-direction: column;
+  }
+
+  #overlay span {
+    font-size: 2rem;
+    margin-top: 20px;
+    color: #ffaa00;
+  }
+
+  #wordDisplay {
+    font-size: 1.8rem;
+    text-align: center;
+    background: rgba(0, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 900px;
+    letter-spacing: 2px;
+    line-height: 1.8;
+  }
+
+  .correct { color: #0f0; }
+  .incorrect { color: #f33; text-decoration: underline; }
+
+  #inputArea {
+    margin-top: 15px;
+    font-size: 1.3rem;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    width: 80%;
+    max-width: 900px;
+    background: rgba(0, 0, 30, 0.7);
+    color: #0ff;
+    letter-spacing: 2px;
+  }
+
+  #timer, #liveWPM {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    text-shadow: 0 0 10px #00ffffbb;
+  }
+
+  canvas {
+    max-width: 100%;
+  }
+
+  #results {
+    margin-top: 30px;
+    width: 90%;
+    max-width: 1000px;
+    display: none;
+  }
+
+  #restartBtn, #clearHistoryBtn {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #00ffff22;
+    color: #00ffff;
+    box-shadow: 0 0 10px #00ffff99;
+  }
+</style>
+</head>
+<body>
+
+<!-- Content goes here - truncated for brevity -->
+
+</body>
+</html>
